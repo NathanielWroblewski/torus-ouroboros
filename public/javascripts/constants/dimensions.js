@@ -31,3 +31,4 @@ export const MIN_CULLING_φ = 15
 export const MIN_CULLING_θ = 310
 
 export const ZOOM = 1.5
+export const FPS = 60

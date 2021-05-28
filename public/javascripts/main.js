@@ -8,7 +8,7 @@ import { FACE_COLOR, EDGE_COLOR } from './constants/colors.js'
 import {
   R, r, Δr, Δθdeg, Δφdeg, halfΔθdeg, halfΔφdeg, MIN_DISTANCE, MAX_DISTANCE,
   EXPANSION_MIN_φ, EXPANSION_MAX_φ, CONTRACTION_φ, EXPANSION_CHANCE,
-  CONTRACTION_CHANCE, MAX_CULLING_φ, MIN_CULLING_φ, MIN_CULLING_θ, ZOOM
+  CONTRACTION_CHANCE, MAX_CULLING_φ, MIN_CULLING_φ, MIN_CULLING_θ, ZOOM, FPS
 } from './constants/dimensions.js'
 
 // Copyright (c) 2020 Nathaniel Wroblewski
@@ -70,7 +70,7 @@ grid({ from, to, by }, ([θdeg, φdeg]) => {
 })
 
 // Render loop
-const step = () => {
+const render = () => {
   context.clearRect(0, 0, 600, 600)
 
   faces.forEach((face, index) => {
@@ -115,7 +115,18 @@ const step = () => {
 
   points.forEach(point => point[2] = (point[2] + 0.5) % 360) // spin
   time += 0.01
-  window.requestAnimationFrame(step)
 }
 
-window.requestAnimationFrame(step)
+let prevTick = 0
+
+const step = () => {
+  window.requestAnimationFrame(step)
+
+  const now = Math.round(FPS * Date.now() / 1000)
+  if (now === prevTick) return
+  prevTick = now
+
+  render()
+}
+
+step()
